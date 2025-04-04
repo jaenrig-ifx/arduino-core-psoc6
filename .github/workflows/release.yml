@@ -5,7 +5,7 @@ on:
     
 jobs:
   arduino-devops:
-    uses: Infineon/arduino-devops/.github/workflows/release.yml@latest
+    uses: Infineon/arduino-devops/.github/workflows/release.yml@release-reuse-package-core
     with:
       release-title: arduino-core-psoc6
       setup-script: bash ./tools/dev-setup.sh
