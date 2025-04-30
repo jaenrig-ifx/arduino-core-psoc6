@@ -58,10 +58,10 @@
                         },
                         {
                             "host": "x86_64-apple-darwin",
-                            "archiveFileName": "mtb-gcc-arm-none-eabi-11.3.1.67-macosx.zip",
-                            "url": "https://github.com/Infineon/arduino-core-psoc6/releases/download/mtb-tools/mtb-gcc-arm-none-eabi-11.3.1.67-macosx.zip",
-                            "checksum": "SHA-256:b65b5f87b8924855d3de409422a468633cbc9939cbabd235f93d9c1f98b38393",
-                            "size": "211089375"
+                            "archiveFileName": "mtb-gcc-arm-none-eabi-11.3.1.67-macosx.tar.gz",
+                            "url": "https://github.com/Infineon/arduino-core-psoc6/releases/download/mtb-tools/mtb-gcc-arm-none-eabi-11.3.1.67-macosx.tar.gz",
+                            "checksum": "SHA-256:081417273428cd7c929e8206c823c8681e53c84ee86f8ce95f71e726702e7d75",
+                            "size": "206451774"
                         }
                     ]
                 },
