@@ -14,7 +14,7 @@ include:
 index-name: package_psoc6_index
 server: 
   type: github
-  owner: Infineon
+  owner: jaenrig-ifx
   repo: arduino-core-psoc6
  
  
