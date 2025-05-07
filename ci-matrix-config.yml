@@ -1,4 +1,4 @@
 include:
- - sketch: libraries/SPI/examples/master/master.ino
-   #  - extras/arduino-examples/examples/01.Basics/Blink/Blink.ino
-   #  - extras/arduino-examples/examples/03.Analog/AnalogInOutSerial/AnalogInOutSerial.ino
+ - sketch:
+    - extras/arduino-examples/examples/01.Basics/Blink/Blink.ino
+    - extras/arduino-examples/examples/03.Analog/AnalogInOutSerial/AnalogInOutSerial.ino
