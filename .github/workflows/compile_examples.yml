@@ -1,11 +1,11 @@
-name: Compile examples 0
+name: Compile examples
 
 on:
   push:
     
 jobs:
   arduino-devops:
-    uses: Infineon/arduino-devops/.github/workflows/compile-examples.yml@compile-example-os-board-matrix
+    uses: Infineon/arduino-devops/.github/workflows/compile-examples.yml@latest
     with:
       core-setup-script: bash ./tools/dev-setup.sh
       ci-setup-script: git submodule update --init extras/arduino-examples
