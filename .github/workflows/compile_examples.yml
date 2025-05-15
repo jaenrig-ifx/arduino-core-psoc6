@@ -5,7 +5,7 @@ on:
     
 jobs:
   arduino-devops:
-    uses: Infineon/arduino-devops/.github/workflows/compile-examples.yml@latest
+    uses: Infineon/arduino-devops/.github/workflows/compile-examples.yml@compile-examples-lib
     with:
       core-setup-script: bash ./tools/dev-setup.sh
       ci-setup-script: git submodule update --init extras/arduino-examples
