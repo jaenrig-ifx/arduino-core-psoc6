@@ -2,16 +2,16 @@ name: Release 0
 
 on:
   push:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version'
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+  # workflow_dispatch:
+  #   inputs:
+  #     version:
+  #       description: 'Release version'
+  #       required: true
+  #       type: choice
+  #       options:
+  #         - patch
+  #         - minor
+  #         - major
   
 jobs:
   arduino-devops:
