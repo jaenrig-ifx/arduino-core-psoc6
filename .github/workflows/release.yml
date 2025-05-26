@@ -1,21 +1,19 @@
-name: Release 0
+name: Release
 
 on:
   push:
-  # workflow_dispatch:
-  #   inputs:
-  #     version:
-  #       description: 'Release version'
-  #       required: true
-  #       type: choice
-  #       options:
-  #         - patch
-  #         - minor
-  #         - major
-  
+  workflow_run:
+    workflows: 
+      - 'Code format check'
+      - 'Code spell check'
+      - 'Commit message check'
+      - 'Compile examples'
+      - 'Build docs'
+    types:
+      - completed
 jobs:
   arduino-devops:
-    uses: Infineon/arduino-devops/.github/workflows/release.yml@release-flow-auto
+    uses: Infineon/arduino-devops/.github/workflows/release-core.yml@release-flow-auto
     with:
       release-title: arduino-core-psoc6
       setup-script: bash ./tools/dev-setup.sh
