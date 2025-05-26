@@ -2,12 +2,13 @@ name: Release
 
 on:
   workflow_run:
+    # Use here the workflow that needs more time to complete
     workflows: 
-      - 'Code format check'
-      - 'Code spell check'
-      - 'Commit message check'
+      # - 'Code format check'
+      # - 'Code spell check'
+      # - 'Commit message check'
       - 'Compile examples'
-      - 'Build docs'
+      # - 'Build docs'
     types:
       - completed
 jobs:
