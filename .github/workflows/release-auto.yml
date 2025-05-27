@@ -16,5 +16,5 @@ jobs:
   arduino-devops:
     uses: Infineon/arduino-devops/.github/workflows/release-auto.yml@release-flow-auto
     with:
-      version: ${{ github.inputs.version }}
+      version: ${{ inputs.version }}
     secrets: inherit
