@@ -22,6 +22,7 @@ jobs:
     secrets: inherit
 
   release:
+    needs: auto-tag
     uses: Infineon/arduino-devops/.github/workflows/release-core.yml@release-flow-auto
     with:
       release-title: arduino-core-psoc6
