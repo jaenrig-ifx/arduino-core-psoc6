@@ -1,6 +1,7 @@
 name: Release auto
 
-on:
+on: 
+  push:
   workflow_dispatch:
     inputs:
       version:
@@ -13,8 +14,16 @@ on:
           - major
   
 jobs:
-  arduino-devops:
+  auto-tag:
+    if:  ${{ github.event_name == 'workflow_dispatch' }}
     uses: Infineon/arduino-devops/.github/workflows/release-auto.yml@release-flow-auto
     with:
       version: ${{ inputs.version }}
+    secrets: inherit
+
+  release:
+    uses: Infineon/arduino-devops/.github/workflows/release-core.yml@release-flow-auto
+    with:
+      release-title: arduino-core-psoc6
+      setup-script: bash ./tools/dev-setup.sh
     secrets: inherit
