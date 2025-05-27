@@ -1,16 +1,8 @@
 name: Release
 
 on:
-  workflow_run:
-    # Use here the workflow that needs more time to complete
-    workflows: 
-      # - 'Code format check'
-      # - 'Code spell check'
-      # - 'Commit message check'
-      - 'Compile examples'
-      # - 'Build docs'
-    types:
-      - completed
+  push:
+    
 jobs:
   arduino-devops:
     uses: Infineon/arduino-devops/.github/workflows/release-core.yml@release-flow-auto
