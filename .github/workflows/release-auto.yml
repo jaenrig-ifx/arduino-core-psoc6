@@ -1,8 +1,6 @@
 name: Release auto
 
-on: 
-  release:
-    types: published
+on:
   push:
     tags: 
       - '[0-9]+.[0-9]+.[0-9]+**'
@@ -18,18 +16,19 @@ on:
           - major
   
 jobs:
-  auto-tag:
-    if:  ${{ github.event_name == 'workflow_dispatch' }}
-    uses: Infineon/arduino-devops/.github/workflows/release-auto.yml@release-flow-auto
-    with:
-      version: ${{ inputs.version }}
-    secrets: inherit
+#   auto-tag:
+#     if:  ${{ github.event_name == 'workflow_dispatch' }}
+#     uses: Infineon/arduino-devops/.github/workflows/release-auto.yml@release-flow-auto
+#     with:
+#       version: ${{ inputs.version }}
+#     secrets: inherit
 
   release:
-    needs: auto-tag
-    if: ${{ always() }}
+    # needs: auto-tag
+    # if: ${{ always() }}
     uses: Infineon/arduino-devops/.github/workflows/release-core.yml@release-flow-auto
     with:
       release-title: arduino-core-psoc6
       setup-script: bash ./tools/dev-setup.sh
+      version: ${{ inputs.version }}
     secrets: inherit
