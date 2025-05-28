@@ -9,6 +9,7 @@ on:
       version:
         description: 'Release version'
         required: true
+        default: ''
         type: choice
         options:
           - patch
