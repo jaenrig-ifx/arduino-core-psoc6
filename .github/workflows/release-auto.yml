@@ -23,6 +23,7 @@ jobs:
 
   release:
     needs: auto-tag
+    if: ${{ always() }}
     uses: Infineon/arduino-devops/.github/workflows/release-core.yml@release-flow-auto
     with:
       release-title: arduino-core-psoc6
