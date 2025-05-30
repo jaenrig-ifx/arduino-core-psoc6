@@ -14,16 +14,34 @@ Socket::Socket():
     _status(SOCKET_STATUS_UNINITED),
     _last_error(CY_RSLT_SUCCESS),
     remote_ip(0, 0, 0, 0),
-    _port(0) {
+    _port(0),
+    _protocol(SOCKET_PROTOCOL_NOT_SET) {
 
 }
 
-void Socket::begin() {
+void Socket::begin(socket_protocol_t protocol) {
     _last_error = Socket::global_sockets_init();
     socket_assert(_last_error);
+    int socket_type = 0, socket_proto = 0;
 
-    _last_error = cy_socket_create(CY_SOCKET_DOMAIN_AF_INET, CY_SOCKET_TYPE_STREAM,
-        CY_SOCKET_IPPROTO_TCP, &socket);
+    _protocol = protocol;
+    switch (_protocol) {
+        case SOCKET_PROTOCOL_TCP:
+            socket_type = CY_SOCKET_TYPE_STREAM;
+            socket_proto = CY_SOCKET_IPPROTO_TCP;
+            break;
+        case SOCKET_PROTOCOL_UDP:
+            socket_type = CY_SOCKET_TYPE_DGRAM;
+            socket_proto = CY_SOCKET_IPPROTO_UDP;
+            break;
+        default:
+            _last_error = SOCKET_STATUS_UNINITED;
+            socket_assert(_last_error);
+            return;
+    }
+
+    _last_error = cy_socket_create(CY_SOCKET_DOMAIN_AF_INET, socket_type,
+        socket_proto, &socket);
     socket_assert(_last_error);
 
     _status = SOCKET_STATUS_CREATED;
@@ -143,9 +161,31 @@ uint32_t Socket::send(const void *data, uint32_t len) {
     if (_last_error != CY_RSLT_SUCCESS) {
         _status = SOCKET_STATUS_ERROR;
     }
-
     return bytes_sent;
 }
+
+uint32_t Socket::send(const void *data, uint32_t len, IPAddress ip, uint16_t port) {
+    uint32_t bytes_sent = 0;
+    cy_socket_sockaddr_t address = {
+        .port = port,
+        .ip_address = {
+            .version = CY_SOCKET_IP_VER_V4,
+            .ip = { .v4 = (static_cast < uint32_t > (ip[3]) << 24) |
+                        (static_cast < uint32_t > (ip[2]) << 16) |
+                        (static_cast < uint32_t > (ip[1]) << 8) |
+                        (static_cast < uint32_t > (ip[0])) }
+        }
+    };
+
+    _last_error = cy_socket_sendto(socket, data, len,
+        CY_SOCKET_FLAGS_NONE, &address,
+        sizeof(cy_socket_sockaddr_t), &bytes_sent);
+    if (_last_error != CY_RSLT_SUCCESS) {
+        _status = SOCKET_STATUS_ERROR;
+    }
+    return bytes_sent;
+}
+
 uint32_t Socket::available() {
     return rx_buf.available();
 }
@@ -201,6 +241,7 @@ cy_rslt_t Socket::getLastError() {
     return _last_error;
 }
 
+
 bool Socket::connect(cy_socket_sockaddr_t *addr) {
     _last_error = cy_socket_connect(socket, addr, sizeof(cy_socket_sockaddr_t));
     if (_last_error != CY_RSLT_SUCCESS) {
@@ -215,16 +256,27 @@ bool Socket::connect(cy_socket_sockaddr_t *addr) {
     return true;
 }
 
-void Socket::receiveCallback() {
+void Socket::receiveCallback(cy_socket_sockaddr_t *peer_addr) {
     if (!rx_buf.isFull()) {
         uint32_t bytes_rcvd_request = rx_buf.availableForStore();
         uint8_t temp_rx_buff[bytes_rcvd_request] = {0};
 
         uint32_t bytes_received = 0;
-        _last_error = cy_socket_recv(socket, temp_rx_buff, bytes_rcvd_request,
-            CY_SOCKET_FLAGS_NONE, &bytes_received);
+        switch (_protocol) {
+            case SOCKET_PROTOCOL_TCP:
+                _last_error = cy_socket_recv(socket, temp_rx_buff, bytes_rcvd_request,
+                    CY_SOCKET_FLAGS_NONE, &bytes_received);
+                break;
+            case SOCKET_PROTOCOL_UDP:
+                _last_error = cy_socket_recvfrom(socket, temp_rx_buff, bytes_rcvd_request,
+                    CY_SOCKET_FLAGS_RECVFROM_NONE, peer_addr, nullptr, &bytes_received);
+                break;
+            default:
+                _last_error = SOCKET_STATUS_UNINITED;
+                socket_assert(_last_error);
+                return;
+        }
         socket_assert(_last_error);
-
         for (uint32_t i = 0; i < bytes_received; i++) {
             rx_buf.store_char(temp_rx_buff[i]);
         }

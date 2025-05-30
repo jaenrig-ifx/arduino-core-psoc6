@@ -16,13 +16,19 @@ typedef enum {
     SOCKET_STATUS_ERROR = -1
 } socket_status_t;
 
+typedef enum {
+    SOCKET_PROTOCOL_NOT_SET = 0,
+    SOCKET_PROTOCOL_TCP,
+    SOCKET_PROTOCOL_UDP,
+} socket_protocol_t;
+
 class Socket {
 
 public:
 
     Socket();
 
-    void begin();
+    void begin(socket_protocol_t protocol);
     void end();
 
     void setTimeout(uint32_t timeout);
@@ -37,6 +43,7 @@ public:
     void listen(int max_connections);
     bool accept(Socket & client_socket);
     uint32_t send(const void *data, uint32_t len);
+    uint32_t send(const void *data, uint32_t len, IPAddress ip, uint16_t port);
     uint32_t available();
     int peek();
     uint32_t receive(uint8_t *data, uint32_t len);
@@ -58,6 +65,7 @@ private:
 
     IPAddress remote_ip;
     uint16_t _port;
+    socket_protocol_t _protocol;
 
     void setOptCallback(int optname, cy_socket_callback_t cback, void *arg);
 
@@ -65,7 +73,7 @@ private:
     arduino::RingBufferN < RX_BUFFER_SIZE > rx_buf;
 
     bool connect(cy_socket_sockaddr_t *addr);
-    void receiveCallback();
+    void receiveCallback(cy_socket_sockaddr_t *peer_addr = nullptr);
 
     static bool global_socket_initialized;
     static uint32_t global_socket_count;
@@ -74,6 +82,7 @@ private:
 
     friend class WiFiServer;
     friend class WiFiClient;
+    friend class WiFiUDP;
 };
 
 #endif /* CY_SECURE_SOCKET_H */
