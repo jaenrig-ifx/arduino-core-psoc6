@@ -39,6 +39,7 @@ public:
     void bind(uint16_t port);
     bool connect(IPAddress ip, uint16_t port);
     bool connect(const char *host, uint16_t port);
+    bool joinMulticastGroup(IPAddress multicastIP, IPAddress localIP);
 
     void listen(int max_connections);
     bool accept(Socket & client_socket);
@@ -69,7 +70,7 @@ private:
 
     void setOptCallback(int optname, cy_socket_callback_t cback, void *arg);
 
-    static const uint16_t RX_BUFFER_SIZE = 256;
+    static const uint16_t RX_BUFFER_SIZE = 4096;
     arduino::RingBufferN < RX_BUFFER_SIZE > rx_buf;
 
     bool connect(cy_socket_sockaddr_t *addr);
