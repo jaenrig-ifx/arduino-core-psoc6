@@ -18,7 +18,7 @@ on:
 
 jobs:
   release:
-    uses: Infineon/arduino-devops/.github/workflows/release.yml@new-release-flow
+    uses: Infineon/arduino-devops/.github/workflows/release.yml@enable-bypass-rule
     with:
       setup-script: bash ./tools/dev-setup.sh
       version: ${{ inputs.version }}
